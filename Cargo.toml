@@ -1,0 +1,43 @@
+[package]
+name = "candle-aesthetic-predictor"
+version = "0.1.0"
+edition = "2021"
+
+default-run = "candle-aesthetic-predictor"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# candle-core = "0.3.1"
+# candle-nn = { version = "0.3.1", features = ["cuda"] }
+# candle-transformers = "0.3.1"
+# candle-core = { path = "../others/candle/candle-core" }
+candle-core = { git = "https://github.com/huggingface/candle.git", ref = "c630622", features = ["cuda"] }
+# candle-nn = { path = "../others/candle/candle-nn" }
+candle-nn = { git = "https://github.com/huggingface/candle.git", ref = "c630622", features = ["cuda"] }
+# candle-nn = { path = "../others/candle/candle-nn", features = ["cuda"] }
+candle-transformers = { git = "https://github.com/huggingface/candle.git", ref = "c630622" }
+# candle-transformers = { path = "../others/candle/candle-transformers" }
+image = { version = "0.24.7", default-features = false, features = ["jpeg", "png"] }
+anyhow = { version = "1", features = ["backtrace"] }
+indicatif = "0.17.7"
+candle-scheduler = { path = "../candle-scheduler" }
+clap = { version = "4.4.11", features = ["derive"] }
+
+
+tokio = { version = "1", features = ["full"] }
+warp = { version = "0.3", features = ["multipart"] }
+futures-util = { version = "0.3", default-features = false, features = ["sink"] }
+
+[[bin]]
+name = "server"
+
+[[bin]]
+name = "predictor"
+
+[[bin]]
+name = "train"
+
+[profile.release]
+lto = true
+opt-level = 's'
