@@ -2,17 +2,15 @@
 
 use std::{fmt::Write, u32};
 
-use candle_aesthetic_predictor::parse_device;
-use candle_aesthetic_predictor::set_seed;
+use aesthetic_predictor::model::aesthetic_predictor_simple;
+use aesthetic_predictor::parse_device;
+use aesthetic_predictor::set_seed;
 use candle_core::error::Result;
 use candle_core::Tensor;
 use candle_nn::{loss, AdamW, Optimizer, ParamsAdamW, VarBuilder, VarMap};
 use clap::arg;
 use clap::Parser;
 use indicatif::{HumanCount, ProgressBar, ProgressState, ProgressStyle};
-
-#[path = "../aesthetic_predictor_simple.rs"]
-mod aesthetic_predictor_simple;
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]

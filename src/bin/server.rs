@@ -1,5 +1,6 @@
+use aesthetic_predictor::model::aesthetic_predictor_simple;
 use aesthetic_predictor_simple::AestheticPredictorSimple;
-use candle_aesthetic_predictor::{parse_device, set_seed};
+use aesthetic_predictor::{parse_device, set_seed};
 use candle_core::{DType, Device};
 use clap::Parser;
 use futures_util::TryStreamExt;
@@ -15,8 +16,6 @@ use warp::{filters::multipart::FormData, reject::Rejection, reply::Reply, Filter
 // use mpart_async::server::MultipartStream;
 // use std::convert::Infallible;
 
-#[path = "../aesthetic_predictor_simple.rs"]
-mod aesthetic_predictor_simple;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]

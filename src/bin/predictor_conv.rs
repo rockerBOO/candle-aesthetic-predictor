@@ -1,7 +1,6 @@
-use aesthetic_predictor::model::aesthetic_predictor_simple;
+use aesthetic_predictor::model::aesthetic_predictor_conv;
 use candle_core::{Device, Result};
 use clap::Parser;
-
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]
@@ -23,30 +22,23 @@ fn main() -> Result<()> {
     let dtype = candle_core::DType::F32;
     let device = &Device::cuda_if_available(0)?;
 
-    // let weights_path = "/home/rockerboo/code/sd-ext/training/sets/2023-12-10-223958/AestheticPredictorSE_ava_openai_clip_L14_5_128.safetensors";
     let weights_path = args.model;
     println!("{}", weights_path);
     let vs =
         unsafe { candle_nn::VarBuilder::from_mmaped_safetensors(&[weights_path], dtype, device)? };
 
-    let model = aesthetic_predictor_simple::AestheticPredictorSimple::new(
+    let model = aesthetic_predictor_conv::AestheticPredictorConv::new(
         vs,
-        &aesthetic_predictor_simple::Config {
-            embed_dim: 768,
-            in_channels: 1024,
+        &aesthetic_predictor_conv::Config {
+            in_channels: 4,
+            out_channels: 1,
         },
     )?;
 
-    // let embedding_path = "/home/rockerboo/code/sd-ext/latents/00000-187894064808623f3f482a5ee531fe0bb9be5a54f5244d4a3-embedding.safetensors";
     let embedding_path = args.input;
-
-    // let embedding = unsafe {
-    //     candle_nn::VarBuilder::from_mmaped_safetensors(&[embedding_path], dtype, device)?
-    // };
-
     let loaded = candle_core::safetensors::load(embedding_path, &Device::cuda_if_available(0)?)?;
 
-    let logits = model.forward(loaded.get("embedding").unwrap())?;
+    let logits = model.forward(loaded.get("latents").unwrap())?;
 
     println!("{}", logits);
     dbg!(logits);
